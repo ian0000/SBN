@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>SEGUNDO BANCO NACIONAL</title>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+</h:head>
+<h:body>
+
+	<div class="w3-top">
+		<div class="w3-bar w3-white w3-wide w3-padding w3-card">
+			<a href="http://localhost:8080/Demo/faces/index.xhtml#home" class="w3-bar-item w3-button"><b>SBN</b> </a>
+			<div class="w3-right w3-hide-small">
+				<p:link class="w3-bar-item w3-button" outcome="login">Iniciar Sesion</p:link>
+
+				<a href="http://localhost:8080/Demo/faces/index.xhtml#about" class="w3-bar-item w3-button">Acerca</a> <a
+					href="http://localhost:8080/Demo/faces/index.xhtml#contact" class="w3-bar-item w3-button">Contacto</a>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="card " style="margin: 10rem 50rem">
+		<h:form>
+			<p:growl id="growl" showDetail="true" />
+			<h:panelGrid columns="2" cellpadding="8">
+				<h:outputLabel for="lblUsuario" value="Usuario:" />
+				<p:inputText id="lblUsuario" required="true"
+					value="#{loginVista.cliente.cliUser}" />
+
+				<h:outputLabel for="lblPassword" value="Contraseña:" />
+				<p:password id="lblPassword" value="#{loginVista.cliente.cliPass}"
+					required="true" toggleMask="true" />
+
+
+
+				<h:column></h:column>
+				<p:commandButton icon="pi pi-key" value="Iniciar Sesión"
+					update="growl lblUsuario lblPassword" resetValues="true"
+					styleClass="p-mt-3" action="#{loginVista.comprobarClave()}"  />
+
+			</h:panelGrid>
+
+		</h:form>
+	</div>
+
+
+
+	<footer class="w3-center w3-black w3-padding-16">
+	<p>
+		Powered by <a href="https://www.w3schools.com/w3css/default.asp"
+			title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a>
+	</p>
+	</footer>
+</h:body>
+</html>

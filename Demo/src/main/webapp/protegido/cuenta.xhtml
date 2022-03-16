@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+
+	<title>SEGUNDO BANCO NACIONAL</title>
+</h:head>
+<h:body>
+	<h:form id="form">
+		<p:toolbar>
+
+			<p:toolbarGroup align="right">
+				<p:commandButton value="Salir" icon="pi pi-power-off"
+					styleClass="ui-button-danger"
+					actionListener="#{clienteVista.cerrarSesion}">
+
+				</p:commandButton>
+			</p:toolbarGroup>
+		</p:toolbar>
+		<p:dataTable id="cuentas" var="cuentas" lazy="null"
+			value="#{clienteVista.listaCuentaBancaria}" style="margin-top:10rem">
+			<f:facet name="header">
+			</f:facet>
+
+
+			<p:column headerText="Numero Cuenta">
+				<h:outputText value="#{cuentas.ctaNumero}" />
+			</p:column>
+			<p:column headerText="Tipo">
+				<h:outputText value="#{cuentas.ctaTipo}" />
+			</p:column>
+
+			<p:column headerText="Saldo">
+				<h:outputText value="#{clienteVista.obtenerPrecio(cuentas.ctaId)}">
+					<f:convertNumber type="currency" currencySymbol="$" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Fecha Creación">
+				<h:outputText value="#{cuentas.ctaCreacion}">
+					<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+				</h:outputText>
+			</p:column>
+			<p:column>
+				<p:commandButton value="Historial" icon="pi pi-calendar"
+					action="#{clienteVista.listarTransacciones}" styleClass="p-mr-2"
+					oncomplete="PF('historialDialog').show()" >
+
+					<f:setPropertyActionListener value="#{cuentas}"
+						target="#{clienteVista.cuentaSeleccionada}" />
+				</p:commandButton>
+			</p:column>
+			<p:column>
+				<p:commandButton value="Transferencia" icon="pi pi-arrows-h"
+					styleClass="p-mr-2" oncomplete="PF('transfDialog').show()">
+					<f:setPropertyActionListener value="#{cuentas}"
+						target="#{clienteVista.cuentaSeleccionada}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+		<p:dialog header="Ultimas Transaciones" showEffect="fade" modal="true"
+			widgetVar="historialDialog" responsive="true">
+			<p:dataTable id="lstTransaccion" var="lstTransaccion" lazy="null"
+				value="#{clienteVista.listaTransaccion}">
+
+				<p:column headerText="Número Transacción">
+					<h:outputText value="#{lstTransaccion.trsNumero}" />
+				</p:column>
+
+				<p:column headerText="Tipo">
+					<h:outputText value="#{lstTransaccion.trsTipo}" />
+				</p:column>
+
+				<p:column headerText="Monto">
+					<h:outputText value="#{lstTransaccion.trsMonto}">
+						<f:convertNumber type="currency" currencySymbol="$" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Fecha" sortBy="#{lstTransaccion.trsFecha}">
+					<h:outputText value="#{lstTransaccion.trsFecha}">
+						<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Concepto">
+					<h:outputText value="#{lstTransaccion.trsConcepto}" />
+				</p:column>
+			</p:dataTable>
+		</p:dialog>
+
+		<p:dialog header="Transferencias" showEffect="fade" modal="true"
+			widgetVar="transfDialog">
+			<p:growl id="confDatos" showDetail="true" />
+			<p:outputLabel>
+				<h:panelGrid columns="3" cellpadding="3">
+					<p:outputLabel>Cuenta:</p:outputLabel>
+					<p:inputText id="ctaVerificar"
+						value="#{clienteVista.cuentaTransferencia.ctaNumero}"></p:inputText>
+					<p:commandButton value="Verificar"
+						actionListener="#{clienteVista.listarDatosCuenta}"
+						update="confDatos,lblNombre,lblCedula "></p:commandButton>
+				</h:panelGrid>
+				<h:panelGrid columns="4">
+
+					<p:outputLabel>Nombre:</p:outputLabel>
+					<p:inputText id="lblNombre"
+						value="#{clienteVista.datosCuenta.fkCliente.cliNombre} - #{clienteVista.datosCuenta.fkCliente.cliApellido}"
+						disabled="true"></p:inputText>
+
+					<p:outputLabel>Cédula:</p:outputLabel>
+					<p:inputText id="lblCedula"
+						value="#{clienteVista.datosCuenta.fkCliente.cliIdentificacion}"
+						disabled="true">
+					</p:inputText>
+				</h:panelGrid>
+			</p:outputLabel>
+			<h:panelGrid columns="2" cellpadding="3">
+
+				<p:outputLabel value="Monto:"></p:outputLabel>
+				<p:inputNumber value="#{clienteVista.datosTransaccion.trsMonto}"
+					symbol=" USD" symbolPosition="s" decimalSeparator="."
+					maxValue="500.00" minValue="0.00" thousandSeparator="," />
+				<p:outputLabel value="Concepto:"></p:outputLabel>
+				<p:inputTextarea
+					value="#{clienteVista.datosTransaccion.trsConcepto}"></p:inputTextarea>
+			</h:panelGrid>
+			<p:commandButton value="Transferir"
+				actionListener="#{clienteVista.generarTransferencia}"
+				update="confDatos, form"></p:commandButton>
+		</p:dialog>
+
+	</h:form>
+
+</h:body>
+</html>

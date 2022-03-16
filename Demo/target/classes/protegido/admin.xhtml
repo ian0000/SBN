@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+	<title>SEGUNDO BANCO NACIONAL</title>
+</h:head>
+<h:body>
+	<h:form id="formAdmin">
+	<p:commandButton id="salgamos" value="Salir" icon="pi pi-power-off"
+			resetValues="true" styleClass="ui-button-danger"
+			actionListener="#{adminVista.cerrarSesion}">
+
+		</p:commandButton>
+		<h:panelGrid columns="3" cellspacing="10" style="margin:20rem 45rem">
+			<p:commandButton value="Crear Cuenta" styleClass="p-mr-2"
+				oncomplete="PF('clienteDialog').show()" resetValues="true"></p:commandButton>
+			<p:commandButton value="Realizar Transacción" styleClass="p-mr-2"
+				oncomplete="PF('trsDialog').show()" resetValues="true"></p:commandButton>
+		</h:panelGrid>
+
+		<p:dialog id="clienteDialog" header="Nueva Cuenta" showEffect="fade"
+			modal="true" widgetVar="clienteDialog">
+			<p:growl id="confCliente" showDetail="true" />
+			<p:outputLabel value="Verificar Cliente"></p:outputLabel>
+			<h:panelGrid columns="3" cellpadding="3">
+				<p:outputLabel>Identificación:</p:outputLabel>
+				<p:inputText value="#{adminVista.nuevoCliente.cliIdentificacion}"
+					maxlength="10"></p:inputText>
+				<p:commandButton value="Verificar"
+					action="#{adminVista.verificarExisteCliente}" resetValues="true"
+					update="confCliente, lblNombre, lblApellido, lblCorreo, lblDireccion, lblTelefono"></p:commandButton>
+			</h:panelGrid>
+			<h:panelGrid columns="4" cellpadding="3">
+				<p:outputLabel value="Nombre: "></p:outputLabel>
+				<p:inputText id="lblNombre"
+					value="#{adminVista.nuevoCliente.cliNombre}"></p:inputText>
+				<p:outputLabel value="Apellido: "></p:outputLabel>
+				<p:inputText id="lblApellido"
+					value="#{adminVista.nuevoCliente.cliApellido}"></p:inputText>
+				<p:outputLabel value="Correo: "></p:outputLabel>
+				<p:inputText id="lblCorreo"
+					value="#{adminVista.nuevoCliente.cliCorreo}"></p:inputText>
+				<p:outputLabel value="Direccion: "></p:outputLabel>
+				<p:inputText id="lblDireccion"
+					value="#{adminVista.nuevoCliente.cliDireccion}"></p:inputText>
+				<p:outputLabel value="Telefono: "></p:outputLabel>
+				<p:inputText id="lblTelefono"
+					value="#{adminVista.nuevoCliente.cliTelefono}"></p:inputText>
+			</h:panelGrid>
+
+			<p:outputLabel value="Escoger El tipo de Cuenta"></p:outputLabel>
+			<p:selectOneRadio id="console"
+				value="#{adminVista.nuevaCuentaBancaria.ctaTipo}"
+				unselectable="true">
+				<f:selectItem itemLabel="Corriente" itemValue="Corriente" />
+				<f:selectItem itemLabel="Ahorros" itemValue="Ahorros" />
+			</p:selectOneRadio>
+			<p:commandButton value="Crear" action="#{adminVista.crearCuenta}"
+				update="confCliente, formAdmin, clienteDialog"></p:commandButton>
+		</p:dialog>
+
+		<p:dialog id="trsDialog" header="Transacción" showEffect="fade"
+			modal="true" widgetVar="trsDialog">
+			<p:growl id="trsMensaje" showDetail="true" />
+			<h:panelGrid columns="3" cellpadding="3">
+				<p:outputLabel>Numero Cuenta:</p:outputLabel>
+				<p:inputText value="#{adminVista.cuentaTransferencia.ctaNumero}"
+					maxlength="10"></p:inputText>
+				<p:commandButton value="Verificar"
+					action="#{adminVista.listarDatosCuenta}"
+					update="trsMensaje, lblNombreCuenta, lblCedulaCuenta "></p:commandButton>
+			</h:panelGrid>
+			<h:panelGrid columns="4">
+
+				<p:outputLabel>Nombre:</p:outputLabel>
+				<p:inputText id="lblNombreCuenta"
+					value="#{adminVista.datosCuenta.fkCliente.cliNombre} - #{adminVista.datosCuenta.fkCliente.cliApellido}"
+					disabled="true"></p:inputText>
+
+				<p:outputLabel>Cédula:</p:outputLabel>
+				<p:inputText id="lblCedulaCuenta"
+					value="#{adminVista.datosCuenta.fkCliente.cliIdentificacion}"
+					disabled="true">
+				</p:inputText>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" cellpadding="3">
+
+				<p:outputLabel value="Monto:"></p:outputLabel>
+				<p:inputNumber value="#{adminVista.datosTransaccion.trsMonto}"
+					symbol=" USD" symbolPosition="s"
+					decimalSeparator="." maxValue="500.00" minValue="0.00"
+					thousandSeparator="," />
+			</h:panelGrid>
+			<p:selectOneRadio id="tip"
+				value="#{adminVista.datosTransaccion.trsTipo}" unselectable="true"
+				>
+				<f:selectItem itemLabel="Déposito" itemValue="Déposito" />
+				<f:selectItem itemLabel="Retiro" itemValue="Retiro" />
+			</p:selectOneRadio>
+			<p:commandButton value="Transferir"
+				actionListener="#{adminVista.generarTransferencia}" resetValues="true"
+				update="trsDialog formAdmin"></p:commandButton>
+				
+		</p:dialog>
+		
+			
+	</h:form>
+</h:body>
+</html>
